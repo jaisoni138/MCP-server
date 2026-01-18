@@ -1,0 +1,54 @@
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "8080:8080"
+    volumes:
+      - open-webui-data:/app/backend/data
+    environment:
+      - "OLLAMA_BASE_URL=http://ollama:11434"
+    restart: unless-stopped
+    networks:
+      - open-webui-net
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - open-webui-net
+
+  mcp-breaking-news-server:
+    container_name: mcp-breaking-news-server
+    build:
+      context: mcp_breaking_news_server
+      dockerfile: Dockerfile
+    command: [ "mcpo", "--port", "8000", "--", "python", "breaking_news_server.py" ]
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - open-webui-net
+
+  mcp-time-server:
+    container_name: mcp-time-server
+    image: python:3.12-slim
+    command: sh -c "pip install uv && uvx mcpo --port 8000 -- uvx mcp-server-time --local-timezone=America/New_York"
+    ports:
+      - "8001:8000"
+    restart: unless-stopped
+    networks:
+      - open-webui-net
+
+volumes:
+  open-webui-data:
+  ollama-data:
+
+networks:
+  open-webui-net:
+    driver: bridge
