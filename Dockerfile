@@ -8,6 +8,8 @@ RUN pip install uv
 
 RUN uv pip install --system fastmcp mcpo
 
+RUN pip install pandas openpyxl
+
 # Expose the port the proxy server will run on
 EXPOSE 8000
 
