@@ -26,7 +26,6 @@ services:
   mcp-custom-server:
     container_name: mcp-custom-server
     build:
-      context: /
       dockerfile: Dockerfile
     command: [ "mcpo", "--port", "8000", "--", "python", "server.py" ]
     ports:
