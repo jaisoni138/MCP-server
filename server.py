@@ -1,25 +1,33 @@
+import pandas as pd
 from pathlib import Path
 from fastmcp import FastMCP, Context
 
-mcp = FastMCP(name="mcp-custom-server")
+mcp = FastMCP(name="mac-excel-server")
 
-DATA_PATH = Path(__file__).parent / "data" / "data.txt"
-
+# Pro-tip: Use home-relative paths for Mac portability
+EXCEL_FILE = Path.home() / "Downloads" / "Jay_Estimated_cost_Future_plan.xlsx"
 
 @mcp.tool()
-def get_custom_data(ctx: Context) -> str:
+def read_excel_data(sheet_name: str = "Total Monthly expense", ctx: Context) -> str:
     """
-    Retrieves information about Breaking News from a local file. In real world scenario we would fetch data from
-    external api or local database. We could also build a custom RAG pipeline and expose it through our MCP server.
+    Reads data from a local Excel file on Mac.
+    Returns the data as a Markdown table for the LLM to process.
     """
     try:
-        info_text = DATA_PATH.read_text()
-        return info_text
-    except FileNotFoundError:
-        error_message = f"Error: The file '{DATA_PATH}' was not found."
-        ctx.error(error_message)
-        return "Information not available."
+        # Check if file exists before processing
+        if not EXCEL_FILE.exists():
+            raise FileNotFoundError(f"Excel file not found at {EXCEL_FILE}")
 
+        # Read the Excel sheet
+        df = pd.read_excel(EXCEL_FILE, sheet_name=sheet_name)
+        
+        # Convert to Markdown so the LLM can "see" the table structure
+        return df.to_markdown(index=False)
+        
+    except Exception as e:
+        error_msg = f"Failed to read Excel: {str(e)}"
+        ctx.error(error_msg)
+        return error_msg
 
 if __name__ == "__main__":
     mcp.run()
