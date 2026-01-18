@@ -3,7 +3,7 @@ from fastmcp import FastMCP, Context
 
 mcp = FastMCP(name="mcp-custom-server")
 
-DATA_PATH = Path(__file__).parent / "data" / "data.csv"
+DATA_PATH = Path(__file__).parent / "data" / "data.txt"
 
 
 @mcp.tool()
