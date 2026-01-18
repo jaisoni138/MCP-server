@@ -28,7 +28,7 @@ services:
     build:
       context: mcp_custom_server
       dockerfile: Dockerfile
-    command: [ "mcpo", "--port", "8000", "--", "python", "mcp_custom_server.py" ]
+    command: [ "mcpo", "--port", "8000", "--", "python", "server.py" ]
     ports:
       - "8000:8000"
     restart: unless-stopped
