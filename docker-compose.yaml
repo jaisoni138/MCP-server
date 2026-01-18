@@ -24,7 +24,7 @@ services:
       - open-webui-net
 
   mcp-custom-server:
-    container_name: mcp-breaking-news-server
+    container_name: mcp-custom-server
     build:
       context: mcp_custom_server
       dockerfile: Dockerfile
