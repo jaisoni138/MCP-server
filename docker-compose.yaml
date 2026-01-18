@@ -23,12 +23,12 @@ services:
     networks:
       - open-webui-net
 
-  mcp-breaking-news-server:
+  mcp-custom-server:
     container_name: mcp-breaking-news-server
     build:
-      context: mcp_breaking_news_server
+      context: mcp_custom_server
       dockerfile: Dockerfile
-    command: [ "mcpo", "--port", "8000", "--", "python", "breaking_news_server.py" ]
+    command: [ "mcpo", "--port", "8000", "--", "python", "mcp_custom_server.py" ]
     ports:
       - "8000:8000"
     restart: unless-stopped
